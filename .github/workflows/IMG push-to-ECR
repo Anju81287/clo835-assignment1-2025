@@ -5,7 +5,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-and-push:
+  build-and-push: IMAGE
     runs-on: ubuntu-latest
 
     env:
