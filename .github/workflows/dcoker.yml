@@ -12,6 +12,7 @@ jobs:
       AWS_REGION: us-east-1
       ECR_REGISTRY: 989788749302.dkr.ecr.us-east-1.amazonaws.com
       ECR_REPO: webapp
+      ECR_REPO_MYSQL: mysql
       IMAGE_TAG: latest
 
     steps:
@@ -40,3 +41,7 @@ jobs:
           docker build -t $ECR_REPO:$IMAGE_TAG .
           docker tag $ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+
+          docker build -t $ECR_REPO_MYSQL:$IMAGE_TAG .
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
