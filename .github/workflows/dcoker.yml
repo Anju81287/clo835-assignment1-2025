@@ -2,7 +2,7 @@ name: Build and Push WebApp and MySQL Images to ECR
 
 on:
   push:
-    branches: [ master ]
+    branches: [maste]
 
 jobs:
   build-and-push:
