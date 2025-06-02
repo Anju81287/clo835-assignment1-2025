@@ -2,7 +2,7 @@ name: Build and Push WebApp and MySQL Images to ECR
 
 on:
   push:
-    branches: master
+    branches: [ master ]
 
 jobs:
   build-and-push:
@@ -30,6 +30,13 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Ensure ECR Repositories Exist
+        run: |
+          aws ecr describe-repositories --repository-names ${{ env.ECR_REPO }} || \
+            aws ecr create-repository --repository-name ${{ env.ECR_REPO }}
+          aws ecr describe-repositories --repository-names ${{ env.ECR_REPO_MYSQL }} || \
+            aws ecr create-repository --repository-name ${{ env.ECR_REPO_MYSQL }}
 
       - name: Build, Tag, and Push WebApp Docker Image
         run: |
