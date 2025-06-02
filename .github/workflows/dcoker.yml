@@ -1,8 +1,8 @@
-name: Build and Push WebApp Image to ECR
+name: Build and Push WebApp and MySQL Images to ECR
 
 on:
   push:
-    branches: [ master]
+    branches: [ master ]
 
 jobs:
   build-and-push:
@@ -31,17 +31,21 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Ensure ECR Repository Exists
+      - name: Ensure ECR Repositories Exist
         run: |
           aws ecr describe-repositories --repository-names ${{ env.ECR_REPO }} || \
-          aws ecr create-repository --repository-name ${{ env.ECR_REPO }}
+            aws ecr create-repository --repository-name ${{ env.ECR_REPO }}
+          aws ecr describe-repositories --repository-names ${{ env.ECR_REPO_MYSQL }} || \
+            aws ecr create-repository --repository-name ${{ env.ECR_REPO_MYSQL }}
 
-      - name: Build, Tag, and Push Docker Image
+      - name: Build, Tag, and Push WebApp Docker Image
         run: |
-          docker build -t $ECR_REPO:$IMAGE_TAG .
+          docker build -t $ECR_REPO:$IMAGE_TAG -f Dockerfile .
           docker tag $ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
 
-          docker build -t $ECR_REPO_MYSQL:$IMAGE_TAG .
-          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
+      - name: Build, Tag, and Push MySQL Docker Image
+        run: |
+          docker build -t $ECR_REPO_MYSQL:$IMAGE_TAG -f mysql/Dockerfile mysql/
+          docker tag $ECR_REPO_MYSQL:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
