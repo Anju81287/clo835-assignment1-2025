@@ -2,7 +2,7 @@ name: Build and Push WebApp Image to ECR
 
 on:
   push:
-    branches: [ master,main ]
+    branches: [ master]
 
 jobs:
   build-and-push:
