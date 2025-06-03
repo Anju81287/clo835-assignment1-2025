@@ -16,10 +16,10 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
-        aws_region: us-east-1
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: us-east-1
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -27,15 +27,12 @@ jobs:
 
     - name: Build, tag, and push App image
       run: |
-        docker build -t app ./app
+        docker build -t app -f Dockerfile .
         docker tag app:latest ${{ secrets.APP_ECR_URI }}:latest
         docker push ${{ secrets.APP_ECR_URI }}:latest
 
     - name: Build, tag, and push MySQL image
       run: |
-        docker build -t mysql ./mysql
+        docker build -t mysql -f Dockerfile_mysql .
         docker tag mysql:latest ${{ secrets.MYSQL_ECR_URI }}:latest
-        docker push ${{ secrets.MYSQL_ECR_URI }}:latest
-          docker build -t $ECR_REPO_MYSQL:$IMAGE_TAG -f mysql/Dockerfile mysql/
-          docker tag $ECR_REPO_MYSQL:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPO_MYSQL:$IMAGE_TAG
+        docker push ${{ secrets.MYSQL_ECR_URI }}:latest
