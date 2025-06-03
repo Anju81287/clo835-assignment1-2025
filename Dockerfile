@@ -1,21 +1,13 @@
 FROM ubuntu:20.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-venv mysql-client && \
-    apt-get clean
-
+RUN apt-get update -y
 COPY . /app
 WORKDIR /app
-
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
-
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=8080
-
+RUN set -xe \
+    && apt-get update -y \
+    && apt-get install -y python3-pip \
+    && apt-get install -y mysql-client 
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 EXPOSE 8080
-
-CMD ["flask", "run"]
+ENTRYPOINT [ "python3" ]
+CMD [ "app.py" ]
