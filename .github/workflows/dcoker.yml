@@ -8,8 +8,6 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_TAG: latest
 
     steps:
     - name: Checkout code
@@ -29,12 +27,12 @@ jobs:
 
     - name: Build, tag, and push App image
       run: |
-        docker build -t app ./app
-        docker tag app:$IMAGE_TAG ${{ secrets.APP_ECR_URI }}:$IMAGE_TAG
-        docker push ${{ secrets.APP_ECR_URI }}:$IMAGE_TAG
+        docker build -t app -f Dockerfile .
+        docker tag app:latest ${{ secrets.APP_ECR_URI }}:latest
+        docker push ${{ secrets.APP_ECR_URI }}:latest
 
     - name: Build, tag, and push MySQL image
       run: |
-        docker build -t mysql ./mysql
-        docker tag mysql:$IMAGE_TAG ${{ secrets.MYSQL_ECR_URI }}:$IMAGE_TAG
-        docker push ${{ secrets.MYSQL_ECR_URI }}:$IMAGE_TAG
+        docker build -t mysql -f Dockerfile_mysql .
+        docker tag mysql:latest ${{ secrets.MYSQL_ECR_URI }}:latest
+        docker push ${{ secrets.MYSQL_ECR_URI }}:latest
