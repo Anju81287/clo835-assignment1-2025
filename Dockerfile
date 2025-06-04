@@ -1,4 +1,4 @@
-#this is commit testinggggg111222
+#this is commit testing
 FROM ubuntu:20.04
 RUN apt-get update -y
 COPY . /app
